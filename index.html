@@ -14,35 +14,35 @@
         <div class="col-12">
           <hr />
           <div class="form-group">
-            <label>Vert : </label>
-            <input class="form-control" type="number" />
+            <label for="greenRange" class="form-label">Vert : </label>
+            <input id="greenRange" class="form-control form-range" type="range" v-model="green" min="0" max="255"/>
           </div>
           <hr />
           <div class="form-group">
-            <label>Bleu : </label>
-            <input class="form-control" type="number" />
+            <label for="blueRange" class="form-label">Bleu : </label>
+            <input id="blueRange" class="form-control form-range" type="range" v-model="blue" min="0" max="255"/>
           </div>
           <hr />
           <div class="form-group">
-            <label>Rouge :</label>
-            <input class="form-control" type="number" />
+            <label for="redRange" class="form-label">Rouge :</label>
+            <input id="redRange" class="form-control form-range" type="range" v-model="red" min="0" max="255"/>
           </div>
           <hr />
           <div class="col-12">
-            <button class="btn btn-primary">Sauvegarder</button>
-            <button class="btn btn-secondary">Annuler</button>
+            <button class="btn btn-primary" @click="save">Sauvegarder</button>
+            <button class="btn btn-secondary" @click="cancel">Annuler</button>
           </div>
           <hr />
-            <h3> Nombre de carrés : </h3>
+            <h3> Nombre de carrés : {{ numberOfSquares }}</h3>
           <hr />
-          <div class="col-12">
-            <div class="prevsquare"></div>
+          <div class="col-12" v-if="numberOfSquares">
+            <div class="prevsquare" v-for="square in squares" :style="{ backgroundColor: square}" @click="selectedSquare = square"></div>
           </div>
-          <h3 > Ajouter des couleurs !</h3>
+          <h3 v-else> Ajouter des couleurs !</h3>
         </div>
       </div>
       <div class="col-6">
-        <div class="square mx-auto" ></div>
+        <div class="square mx-auto" :style="{ backgroundColor: selectedSquare }" style="border: solid 1px rgba(0,0,0,.1); border-radius: 5px"></div>
       </div>
     </div>
   </div>
@@ -51,6 +51,34 @@
     new Vue({
       el:'#app',
       data: {
+          green: 0,
+          blue: 0,
+          red: 0,
+          squares: [],
+      },
+      methods: {
+          save() {
+              this.squares.push(`rgb(${this.red}, ${this.green}, ${this.blue})`);
+              this.resetColor();
+              console.log(this.squares);
+          },
+          cancel() {
+              this.squares = [];
+              this.resetColor();
+          },
+          resetColor() {
+              this.green = 0;
+              this.red = 0;
+              this.blue = 0;
+          }
+      },
+      computed: {
+          numberOfSquares() {
+              return this.squares.length;
+          },
+          selectedSquare() {
+              return `rgb(${this.red}, ${this.green}, ${this.blue})`;
+          }
       }
     })
   </script>
